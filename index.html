@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="kk" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ақдана - Қыз ұзату тойына шақыру</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            100: '#FAF4E5',
+                            200: '#F3E5AB',
+                            300: '#E6C687',
+                            400: '#DCB35D',
+                            500: '#D4AF37',
+                            600: '#C59B27',
+                            700: '#A67C1E',
+                            800: '#8A6B12'
+                        },
+                        cream: {
+                            100: '#FFFDF9',
+                            200: '#FDF6E2',
+                            300: '#FAF0CA',
+                            400: '#F5E6C8'
+                        },
+                        blush: {
+                            50: '#FFF7F8',
+                            100: '#FDE8EB',
+                            200: '#FACCD4',
+                            300: '#F7A1B2',
+                            400: '#F0758F'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        title: ['"Cinzel Decorative"', 'serif'],
+                        playfair: ['"Playfair Display"', 'serif'],
+                        sans: ['"Montserrat"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FCFBF7;
+            color: #333333;
+            overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif;
+            background-image: radial-gradient(circle at 50% 0%, rgba(253, 232, 235, 0.4) 0%, rgba(252, 251, 247, 0.95) 75%);
+        }
+
+        /* Cream Color for Akdana Name */
+        .cream-name-text {
+            color: #FAF0CA;
+            text-shadow: 
+                0 0 1px #D4AF37,
+                2px 2px 8px rgba(138, 107, 18, 0.6),
+                -1px -1px 0 rgba(212, 175, 55, 0.4);
+        }
+
+        /* Gold Gradient Text */
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #A67C1E 0%, #D4AF37 30%, #FBF5B7 50%, #D4AF37 70%, #8A6B12 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-gradient-bg {
+            background: linear-gradient(135deg, #D4AF37 0%, #F3E5AB 50%, #AA771C 100%);
+        }
+
+        /* Luxury Card with blur */
+        .luxury-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow: 0 15px 35px -5px rgba(226, 185, 195, 0.35);
+        }
+
+        /* Repeating Kazakh Ornament Background Pattern */
+        .ornament-bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M40 0 C45 15, 65 15, 65 30 C65 40, 50 45, 40 60 C30 45, 15 40, 15 30 C15 15, 35 15, 40 0 Z M40 80 C45 65, 65 65, 65 50 C65 40, 50 35, 40 20 C30 35, 15 40, 15 50 C15 65, 35 65, 40 80 Z' fill='%23d4af37' fill-opacity='0.05'/%3E%3C/svg%3E");
+        }
+
+        /* Petal Canvas overlay */
+        #petalCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 40;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 0 14px rgba(212, 175, 55, 0); }
+        }
+
+        .audio-btn-pulse {
+            animation: pulseGlow 2.5s infinite;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+        }
+
+        .float-anim {
+            animation: floatSlow 6s ease-in-out infinite;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FCFBF7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E6C687;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="relative text-gray-800 antialiased selection:bg-blush-200 selection:text-gold-800 ornament-bg-pattern">
+
+    <!-- Interactive Petal Animation Overlay -->
+    <canvas id="petalCanvas"></canvas>
+
+    <div class="fixed top-5 right-5 z-50">
+        <button id="musicToggleBtn" onclick="toggleAudio()" class="audio-btn-pulse flex items-center gap-2.5 bg-white/95 backdrop-blur-md px-4 py-2.5 rounded-full border border-gold-400 shadow-xl text-gold-700 hover:text-gold-900 transition-all transform hover:scale-105 active:scale-95">
+            <i id="musicIcon" class="fa-solid fa-music text-lg"></i>
+            <span id="musicText" class="text-xs font-semibold uppercase tracking-wider hidden sm:inline">Әлқисса күйі</span>
+        </button>
+    </div>
+
+    <!-- Background Audio Stream with fallback sources -->
+    <audio id="alkissaAudio" preload="auto" loop>
+        <source src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Dombyra_solo_kui.ogg" type="audio/ogg">
+    </audio>
+
+    <section class="min-h-screen relative flex items-center justify-center pt-8 pb-16 px-4 overflow-hidden">
+        
+        <!-- TOP LEFT KAZAKH ORNAMENT -->
+        <div class="absolute top-0 left-0 w-36 sm:w-52 md:w-64 opacity-35 pointer-events-none z-0">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-gold-500">
+                <path d="M0 0 H200 C200 50, 150 100, 100 100 C50 100, 0 150, 0 200 Z" fill="currentColor" opacity="0.15"/>
+                <path d="M20 20 C40 5, 80 5, 90 30 C100 55, 70 70, 50 50 C30 30, 60 10, 80 20 M20 20 C5 40, 5 80, 30 90 C55 100, 70 70, 50 50 C30 30, 10 60, 20 80" stroke="#D4AF37" stroke-width="4" fill="none"/>
+            </svg>
+        </div>
+
+        <!-- TOP RIGHT KAZAKH ORNAMENT -->
+        <div class="absolute top-0 right-0 w-36 sm:w-52 md:w-64 opacity-35 pointer-events-none z-0 transform scale-x-[-1]">
+            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-gold-500">
+                <path d="M0 0 H200 C200 50, 150 100, 100 100 C50 100, 0 150, 0 200 Z" fill="currentColor" opacity="0.15"/>
+                <path d="M20 20 C40 5, 80 5, 90 30 C100 55, 70 70, 50 50 C30 30, 10 60, 20 80" stroke="#D4AF37" stroke-width="4" fill="none"/>
+            </svg>
+        </div>
+
+        <div class="max-w-2xl w-full text-center relative z-10 my-auto pt-4">
+            
+            <!-- Kazakh Yurt Vector Illustration -->
+            <div class="reveal active inline-block mb-3 float-anim">
+                <div class="relative w-36 h-28 sm:w-44 sm:h-36 mx-auto">
+                    <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg" class="w-full h-full filter drop-shadow-md">
+                        <path d="M100 15 C45 15, 15 55, 10 95 L190 95 C185 55, 155 15, 100 15 Z" fill="#FFFDF9" stroke="#D4AF37" stroke-width="3"/>
+                        <circle cx="100" cy="28" r="14" fill="#FAF4E5" stroke="#C59B27" stroke-width="3"/>
+                        <line x1="100" y1="14" x2="100" y2="42" stroke="#C59B27" stroke-width="2"/>
+                        <line x1="86" y1="28" x2="114" y2="28" stroke="#C59B27" stroke-width="2"/>
+                        <line x1="90" y1="18" x2="110" y2="38" stroke="#C59B27" stroke-width="1.5"/>
+                        <line x1="90" y1="38" x2="110" y2="18" stroke="#C59B27" stroke-width="1.5"/>
+                        <path d="M100 42 L30 95 M100 42 L60 95 M100 42 L80 95 M100 42 L120 95 M100 42 L140 95 M100 42 L170 95" stroke="#E6C687" stroke-width="1.5" opacity="0.6"/>
+                        <path d="M14 80 Q100 92, 186 80" stroke="#E8718A" stroke-width="5" fill="none"/>
+                        <path d="M14 80 Q100 92, 186 80" stroke="#D4AF37" stroke-width="2" stroke-dasharray="4,4" fill="none"/>
+                        <rect x="10" y="95" width="180" height="35" fill="#FAF4E5" stroke="#D4AF37" stroke-width="3" rx="2"/>
+                        <path d="M82 95 H118 V130 H82 Z" fill="#E8718A" stroke="#C59B27" stroke-width="2"/>
+                        <path d="M82 95 Q100 90, 118 95" fill="#C59B27"/>
+                        <circle cx="100" cy="112" r="5" fill="#F3E5AB" stroke="#8A6B12" stroke-width="1.5"/>
+                        <path d="M0 130 Q100 128, 200 130 V145 H0 Z" fill="#E6C687" opacity="0.3"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Invitation Subtitle -->
+            <p class="reveal active text-xs sm:text-sm font-semibold tracking-[0.35em] uppercase text-gold-700 mb-1">
+                Шақыру билеті
+            </p>
+
+            <h2 class="reveal active font-serif text-2xl sm:text-3xl md:text-4xl italic text-gray-700 mb-3 font-medium">
+                Қыз Ұзату Тойы
+            </h2>
+
+            <!-- Exquisite Bride Name "Ақдана" in Warm Cream Color -->
+            <div class="reveal active my-6 relative py-3">
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="w-64 h-64 sm:w-80 sm:h-80 rounded-full bg-gold-200/40 blur-3xl -z-10"></div>
+                </div>
+                
+                <div class="inline-block relative px-8 py-3 bg-gold-700/80 rounded-3xl backdrop-blur-md border-2 border-gold-400 shadow-2xl">
+                    <h1 class="font-title text-5xl sm:text-7xl md:text-8xl font-bold cream-name-text tracking-wider leading-none">
+                        Ақдана
+                    </h1>
+                </div>
+            </div>
+
+            <p class="reveal text-gray-700 italic font-serif text-lg sm:text-xl max-w-md mx-auto mb-8 px-2 leading-relaxed">
+                «Ақ босағадан аттап, бақытына жол тартқан аяулы қызымыздың ұзату тойының қадірлі қонағы болыңыздар!»
+            </p>
+
+            <div class="reveal luxury-card rounded-3xl p-6 mb-8 max-w-md mx-auto border-gold-300 relative overflow-hidden">
+                <div class="absolute top-2 left-2 text-gold-400 opacity-40 text-xs">◈</div>
+                <div class="absolute top-2 right-2 text-gold-400 opacity-40 text-xs">◈</div>
+                <div class="absolute bottom-2 left-2 text-gold-400 opacity-40 text-xs">◈</div>
+                <div class="absolute bottom-2 right-2 text-gold-400 opacity-40 text-xs">◈</div>
+
+                <p class="text-xs uppercase tracking-widest text-gold-700 font-bold mb-4">
+                    Салтанатты сәтке қалды:
+                </p>
+                <div class="grid grid-cols-4 gap-2 text-center" id="countdown">
+                    <div class="bg-blush-50/90 rounded-2xl p-2.5 border border-blush-200/80 shadow-inner">
+                        <span id="days" class="block font-serif text-2xl sm:text-3xl font-bold text-gray-800">00</span>
+                        <span class="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">Күн</span>
+                    </div>
+                    <div class="bg-blush-50/90 rounded-2xl p-2.5 border border-blush-200/80 shadow-inner">
+                        <span id="hours" class="block font-serif text-2xl sm:text-3xl font-bold text-gray-800">00</span>
+                        <span class="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">Сағат</span>
+                    </div>
+                    <div class="bg-blush-50/90 rounded-2xl p-2.5 border border-blush-200/80 shadow-inner">
+                        <span id="minutes" class="block font-serif text-2xl sm:text-3xl font-bold text-gray-800">00</span>
+                        <span class="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">Минут</span>
+                    </div>
+                    <div class="bg-blush-50/90 rounded-2xl p-2.5 border border-blush-200/80 shadow-inner">
+                        <span id="seconds" class="block font-serif text-2xl sm:text-3xl font-bold text-gray-800">00</span>
+                        <span class="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">Секунд</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Date Banner -->
+            <div class="reveal inline-flex items-center gap-3 px-7 py-3.5 bg-white/95 rounded-full border border-gold-400 shadow-md text-gray-800">
+                <i class="fa-regular fa-calendar-check text-gold-600 text-lg"></i>
+                <span class="font-semibold text-sm sm:text-base">21 Қараша 2026 жыл • Сағат 18:00</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 px-4 relative">
+        <div class="max-w-2xl mx-auto text-center">
+            <div class="reveal luxury-card rounded-3xl p-8 md:p-12 relative overflow-hidden">
+                
+                <!-- Background Kazakh Ornament -->
+                <div class="absolute -right-10 -bottom-10 w-48 h-48 opacity-10 pointer-events-none">
+                    <svg viewBox="0 0 100 100" fill="currentColor" class="text-gold-700 w-full h-full">
+                        <path d="M50 0 C65 25, 85 25, 100 50 C85 75, 65 75, 50 100 C35 75, 15 75, 0 50 C15 25, 35 25, 50 0 Z"/>
+                    </svg>
+                </div>
+                <div class="absolute -left-10 -top-10 w-48 h-48 opacity-10 pointer-events-none transform rotate-180">
+                    <svg viewBox="0 0 100 100" fill="currentColor" class="text-gold-700 w-full h-full">
+                        <path d="M50 0 C65 25, 85 25, 100 50 C85 75, 65 75, 50 100 C35 75, 15 75, 0 50 C15 25, 35 25, 50 0 Z"/>
+                    </svg>
+                </div>
+
+                <div class="w-12 h-12 mx-auto mb-4 text-gold-500">
+                    <svg viewBox="0 0 100 100" fill="currentColor" class="w-full h-full">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="4"/>
+                        <path d="M50 15 C55 30, 70 30, 70 45 C70 55, 60 60, 50 80 C40 60, 30 55, 30 45 C30 30, 45 30, 50 15 Z"/>
+                    </svg>
+                </div>
+
+                <p class="font-serif text-xl sm:text-2xl italic leading-relaxed text-gray-700 mb-6">
+                    Ардақты ағайын-жұрт, бауырлар,<br>
+                    Қадірлі қонақтар мен сыйлы әріптестер!<br><br>
+                    Аяулы қызымыз <span class="font-bold text-gold-700 font-serif">Ақдананың</span> қыз ұзату тойына арналған салтанатты дастарханымыздың төрінде өзіңізді көруге қуаныштымыз!
+                </p>
+
+                <div class="flex items-center justify-center gap-3 my-6">
+                    <div class="h-0.5 w-16 bg-gradient-to-r from-transparent to-gold-400"></div>
+                    <svg class="w-6 h-6 text-gold-600" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"/>
+                    </svg>
+                    <div class="h-0.5 w-16 bg-gradient-to-l from-transparent to-gold-400"></div>
+                </div>
+
+                <p class="text-xs uppercase tracking-[0.2em] text-gold-700 font-bold mb-2">Той иелері</p>
+                <h3 class="font-serif text-3xl sm:text-4xl font-bold text-gray-800">
+                    Жәнібек & Бақытгүл
+                </h3>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 px-4 relative">
+        <div class="max-w-xl mx-auto">
+            <div class="text-center mb-8">
+                <p class="text-xs uppercase tracking-[0.25em] text-gold-700 font-bold">Жауап беру</p>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-gray-800 mt-1">Қатысуыңызды Растаңыз</h2>
+                <p class="text-xs text-gray-500 mt-2">Тойға келетініңізді алдын ала хабарлауыңызды өтінеміз</p>
+            </div>
+
+            <form id="rsvpForm" onsubmit="sendWhatsAppRSVP(event)" class="reveal luxury-card rounded-3xl p-6 sm:p-8 space-y-5">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-700 mb-2">Аты-жөніңіз *</label>
+                    <input type="text" id="guestName" required placeholder="Мысалы: Болат & Айнұр" class="w-full px-4 py-3 rounded-xl border border-gold-200 focus:outline-none focus:border-gold-500 bg-white/90 text-sm shadow-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-700 mb-2">Қатысу мәртебесі *</label>
+                    <div class="space-y-2.5">
+                        <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:bg-blush-50/50 transition">
+                            <input type="radio" name="attendance" value="Иә, қуана келемін" checked class="accent-gold-600 w-4 h-4">
+                            <span class="text-sm font-medium text-gray-800">Иә, қуана келемін</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:bg-blush-50/50 transition">
+                            <input type="radio" name="attendance" value="Жұбайыммен / Отбасыммен келемін" class="accent-gold-600 w-4 h-4">
+                            <span class="text-sm font-medium text-gray-800">Жұбайыммен / Отбасыммен келемін</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3.5 rounded-xl border border-gray-200 bg-white cursor-pointer hover:bg-blush-50/50 transition">
+                            <input type="radio" name="attendance" value="Өкінішке орай, келе алмаймын" class="accent-gold-600 w-4 h-4">
+                            <span class="text-sm font-medium text-gray-800">Өкінішке орай, келе алмаймын</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-700 mb-2">Қонақтар саны</label>
+                    <select id="guestCount" class="w-full px-4 py-3 rounded-xl border border-gold-200 focus:outline-none focus:border-gold-500 bg-white/90 text-sm shadow-sm">
+                        <option value="1 адам">1 адам</option>
+                        <option value="2 адам" selected>2 адам</option>
+                        <option value="3+ адам">3+ адам (отбасымен)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-gray-700 mb-2">Ақданаға ақ тілегіңіз</label>
+                    <textarea id="guestWish" rows="3" placeholder="Ізгі тілектеріңізді осы жерге қалдырыңыз..." class="w-full px-4 py-3 rounded-xl border border-gold-200 focus:outline-none focus:border-gold-500 bg-white/90 text-sm shadow-sm"></textarea>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 gold-gradient-bg text-gray-900 font-bold text-sm tracking-wider uppercase rounded-xl shadow-md hover:opacity-95 transition transform active:scale-[0.98] flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    Жауапты WhatsApp-қа жіберу
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="py-12 px-4 bg-white text-center border-t border-gold-300/60 relative">
+        <div class="max-w-md mx-auto space-y-4">
+            <p class="text-xs font-bold uppercase tracking-widest text-gold-700">Сұрақтар бойынша байланыс</p>
+            
+            <!-- WhatsApp button without digits displayed -->
+            <a href="https://wa.me/77078165293" target="_blank" class="inline-flex items-center gap-2.5 bg-emerald-500 text-white px-8 py-3.5 rounded-full font-semibold text-sm shadow-md hover:bg-emerald-600 transition active:scale-95">
+                <i class="fa-brands fa-whatsapp text-xl"></i> WhatsApp-қа жазу
+            </a>
+
+            <!-- Yurt Icon Accent -->
+            <div class="pt-8">
+                <svg class="w-10 h-10 mx-auto text-gold-500 opacity-80" viewBox="0 0 100 100" fill="currentColor">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="4"/>
+                    <path d="M50 10 L50 90 M10 50 L90 50 M22 22 L78 78 M22 78 L78 22" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <h3 class="font-title text-3xl font-bold gold-gradient-text mt-2">Ақдана</h3>
+                <p class="text-xs text-gray-400 mt-1">21 Қараша 2026 ж. • Ұзату Той</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* 1. Petal Animation */
+        const canvas = document.getElementById('petalCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const petals = [];
+        const petalCount = 22;
+
+        for (let i = 0; i < petalCount; i++) {
+            petals.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 8 + 6,
+                speedY: Math.random() * 1 + 0.5,
+                speedX: Math.random() * 0.6 - 0.3,
+                angle: Math.random() * 360,
+                spin: Math.random() * 0.02 - 0.01,
+                opacity: Math.random() * 0.4 + 0.3
+            });
+        }
+
+        function drawPetals() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            petals.forEach(p => {
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.angle);
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(247, 161, 178, ${p.opacity})`;
+                ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+
+                p.y += p.speedY;
+                p.x += p.speedX;
+                p.angle += p.spin;
+
+                if (p.y > canvas.height + 20) {
+                    p.y = -10;
+                    p.x = Math.random() * canvas.width;
+                }
+            });
+            requestAnimationFrame(drawPetals);
+        }
+        drawPetals();
+
+        /* 2. Target Countdown Timer: 21 November 2026 18:00 */
+        const targetDate = new Date('November 21, 2026 18:00:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = days < 10 ? '0' + days : days;
+                document.getElementById('hours').innerText = hours < 10 ? '0' + hours : hours;
+                document.getElementById('minutes').innerText = minutes < 10 ? '0' + minutes : minutes;
+                document.getElementById('seconds').innerText = seconds < 10 ? '0' + seconds : seconds;
+            } else {
+                document.getElementById('countdown').innerHTML = `<p class="col-span-4 font-serif text-xl font-bold text-gold-700">Той басталды!</p>`;
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        /* 3. Scroll Reveal Effect */
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            const windowHeight = window.innerHeight;
+            reveals.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 40) {
+                    el.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', revealOnScroll);
+        revealOnScroll();
+
+        /* 4. Send RSVP via WhatsApp to 87078165293 (+77078165293) */
+        function sendWhatsAppRSVP(event) {
+            event.preventDefault();
+            const name = document.getElementById('guestName').value.trim();
+            const attendance = document.querySelector('input[name="attendance"]:checked').value;
+            const guestCount = document.getElementById('guestCount').value;
+            const wish = document.getElementById('guestWish').value.trim();
+
+            const targetPhone = "77078165293";
+
+            let message = `Сәлеметсіз бе! Мен Ақдананың қыз ұзату тойына жауабымды қалдырамын:\n\n`;
+            message += `👤 Аты-жөні: ${name}\n`;
+            message += `📌 Мәртебесі: ${attendance}\n`;
+            message += `👥 Қонақтар саны: ${guestCount}\n`;
+            if (wish) {
+                message += `💬 Ақ тілек: "${wish}"\n`;
+            }
+
+            const encodedMessage = encodeURIComponent(message);
+            const waUrl = `https://wa.me/${targetPhone}?text=${encodedMessage}`;
+
+            window.open(waUrl, '_blank');
+        }
+
+        /* 5. Authentic "Alkissa" (Әлқисса - Нұрғиса Тілендиев) Web Audio Synthesizer & Player Engine */
+        let audioCtx = null;
+        let isPlaying = false;
+        let alkissaStepTimeout = null;
+
+        // Frequencies for Dombra D-G / D-A tuning notes used in Alkissa
+        const N = {
+            D3: 146.83,
+            G3: 196.00,
+            A3: 220.00,
+            B3: 246.94,
+            C4: 261.63,
+            D4: 293.66,
+            E4: 329.63,
+            F4: 349.23,
+            FS4: 369.99,
+            G4: 392.00,
+            A4: 440.00,
+            B4: 493.88,
+            C5: 523.25,
+            D5: 587.33
+        };
+
+        // Authentic 6/8 Rhythmic Motive & Melody score of Tlendiev's "Alkissa"
+        const alkissaMotive = [
+            // Theme opening strumming & fast picking
+            { top: N.D4, drone: N.G3, duration: 130, strum: true },
+            { top: N.G4, drone: N.G3, duration: 110, strum: false },
+            { top: N.A4, drone: N.G3, duration: 110, strum: false },
+            { top: N.B4, drone: N.G3, duration: 220, strum: true },
+            { top: N.A4, drone: N.G3, duration: 110, strum: false },
+            { top: N.G4, drone: N.G3, duration: 220, strum: true },
+            { top: N.FS4, drone: N.G3, duration: 110, strum: false },
+
+            { top: N.G4, drone: N.D3, duration: 130, strum: true },
+            { top: N.A4, drone: N.D3, duration: 110, strum: false },
+            { top: N.B4, drone: N.D3, duration: 110, strum: false },
+            { top: N.C5, drone: N.D3, duration: 220, strum: true },
+            { top: N.B4, drone: N.D3, duration: 110, strum: false },
+            { top: N.A4, drone: N.D3, duration: 220, strum: true },
+            { top: N.G4, drone: N.D3, duration: 110, strum: false },
+
+            // Virtuosic Alkissa middle phrase
+            { top: N.D5, drone: N.G3, duration: 140, strum: true },
+            { top: N.D5, drone: N.G3, duration: 110, strum: false },
+            { top: N.C5, drone: N.G3, duration: 110, strum: false },
+            { top: N.B4, drone: N.G3, duration: 220, strum: true },
+            { top: N.A4, drone: N.G3, duration: 110, strum: false },
+            { top: N.B4, drone: N.G3, duration: 140, strum: true },
+            { top: N.G4, drone: N.G3, duration: 220, strum: true },
+
+            // Cadence
+            { top: N.A4, drone: N.D3, duration: 130, strum: true },
+            { top: N.G4, drone: N.D3, duration: 110, strum: false },
+            { top: N.FS4, drone: N.D3, duration: 110, strum: false },
+            { top: N.G4, drone: N.D3, duration: 320, strum: true }
+        ];
+
+        function synthesizeDombraPluck(freq, isStrum, delay = 0) {
+            if (!audioCtx || !freq) return;
+
+            setTimeout(() => {
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    const filter = audioCtx.createBiquadFilter();
+
+                    // Dombra plucked string timbre synthesis using triangle with harmonic filter
+                    osc.type = isStrum ? 'sawtooth' : 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(isStrum ? 2800 : 1800, audioCtx.currentTime);
+                    filter.Q.setValueAtTime(3.5, audioCtx.currentTime);
+
+                    // Pluck envelope: sharp attack, natural decay
+                    const now = audioCtx.currentTime;
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.linearRampToValueAtTime(isStrum ? 0.28 : 0.18, now + 0.008);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + (isStrum ? 0.45 : 0.25));
+
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(audioCtx.destination);
+
+                    osc.start(now);
+                    osc.stop(now + 0.48);
+                } catch(e) {}
+            }, delay);
+        }
+
+        let noteStep = 0;
+        function playAlkissaSequence() {
+            if (!isPlaying) return;
+
+            const note = alkissaMotive[noteStep % alkissaMotive.length];
+            
+            // Pluck lead melody string
+            synthesizeDombraPluck(note.top, note.strum, 0);
+            
+            // Pluck/Strum drone bass string for authentic Kazakh Dombra sound
+            if (note.drone) {
+                synthesizeDombraPluck(note.drone, note.strum, note.strum ? 15 : 0);
+            }
+
+            noteStep++;
+            alkissaStepTimeout = setTimeout(playAlkissaSequence, note.duration);
+        }
+
+        function toggleAudio() {
+            const icon = document.getElementById('musicIcon');
+            const text = document.getElementById('musicText');
+            const audioElem = document.getElementById('alkissaAudio');
+
+            if (!isPlaying) {
+                isPlaying = true;
+                icon.classList.add('animate-spin');
+                text.innerText = "«Әлқисса» шырқалуда";
+
+                // Attempt primary audio stream playback first
+                if (audioElem) {
+                    audioElem.play().then(() => {
+                        // Audio stream started successfully
+                    }).catch(() => {
+                        // If audio file stream fails or blocked, start authentic Web Audio synthesizer for Alkissa
+                        if (!audioCtx) {
+                            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                        }
+                        if (audioCtx.state === 'suspended') {
+                            audioCtx.resume();
+                        }
+                        noteStep = 0;
+                        playAlkissaSequence();
+                    });
+                }
+            } else {
+                isPlaying = false;
+                if (audioElem) audioElem.pause();
+                if (alkissaStepTimeout) clearTimeout(alkissaStepTimeout);
+                icon.classList.remove('animate-spin');
+                text.innerText = "Әлқисса күйі";
+            }
+        }
+    </script>
+</body>
+</html>
