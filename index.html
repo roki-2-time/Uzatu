@@ -521,8 +521,13 @@
     </script>
 
     <!-- ===== СКРИПТ 4: музыка «Әлқисса» ===== -->
+        <!-- ===== СКРИПТ 4: музыка «Әлқисса» ===== -->
     <script>
         (function () {
+            /* true  = при блокировке автозвука показать экран «Шақыруды ашу»
+               false = без экрана: музыка начнётся при первом касании/клике по странице */
+            var USE_SPLASH = true;
+
             var audioElem = document.getElementById('alkissaAudio');
             var btn = document.getElementById('musicToggleBtn');
             var icon = document.getElementById('musicIcon');
@@ -536,7 +541,7 @@
             var synthTimeout = null;
             var noteStep = 0;
 
-            /* ---- Запасной синтезатор (играет, только если alkissa.mp3 не найден) ---- */
+            /* ---- Запасной синтезатор (только если alkissa.mp3 не найден) ---- */
             var N = {
                 D3: 146.83, G3: 196.00, A3: 220.00, B3: 246.94,
                 C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, FS4: 369.99,
@@ -623,36 +628,88 @@
                 } catch (e) {}
             }
 
-            /* ---- Основная логика ---- */
-            var sourceEl = audioElem.querySelector('source');
-            if (sourceEl) {
-                sourceEl.addEventListener('error', function () { audioFailed = true; });
-            }
-
+            /* ---- Интерфейс ---- */
             function setUI(playing) {
                 icon.classList.toggle('animate-spin', playing);
                 text.innerText = playing ? '«Әлқисса» шырқалуда' : 'Әлқисса күйі';
             }
 
-            function startMusic() {
-                if (isPlaying) return;
-                isPlaying = true;
-                setUI(true);
+            var sourceEl = audioElem.querySelector('source');
+            if (sourceEl) {
+                sourceEl.addEventListener('error', function () { audioFailed = true; });
+            }
 
-                if (audioFailed) { startSynth(); return; }
+            /* ---- Стартовый экран ---- */
+            function hideSplash() {
+                var s = document.getElementById('splash');
+                if (!s) return;
+                s.style.opacity = '0';
+                setTimeout(function () { if (s.parentNode) s.parentNode.removeChild(s); }, 650);
+            }
+
+            function showSplash() {
+                if (document.getElementById('splash')) return;
+                var s = document.createElement('div');
+                s.id = 'splash';
+                s.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FCFBF7;text-align:center;padding:24px;transition:opacity .6s ease;';
+                s.innerHTML =
+                    '<p style="font-family:Montserrat,sans-serif;font-size:12px;font-weight:600;letter-spacing:.35em;text-transform:uppercase;color:#A67C1E;margin:0 0 10px;">Шақыру билеті</p>' +
+                    '<p style="font-family:Cormorant Garamond,serif;font-size:26px;font-style:italic;color:#555;margin:0 0 6px;">Қыз Ұзату Тойы</p>' +
+                    '<h1 style="font-family:Cinzel Decorative,serif;font-size:56px;font-weight:700;color:#C59B27;margin:0 0 34px;">Ақдана</h1>' +
+                    '<button id="splashBtn" type="button" style="font-family:Montserrat,sans-serif;font-size:14px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#222;background:linear-gradient(135deg,#D4AF37 0%,#F3E5AB 50%,#AA771C 100%);border:none;border-radius:999px;padding:16px 38px;cursor:pointer;box-shadow:0 8px 20px rgba(170,119,28,.35);">Шақыруды ашу</button>';
+                document.body.appendChild(s);
+
+                document.getElementById('splashBtn').addEventListener('click', function () {
+                    userPaused = false;
+                    tryStart(true);
+                    hideSplash();
+                });
+            }
+
+            /* ---- Запуск музыки ---- */
+            var gestureEvents = ['pointerup', 'touchend', 'click', 'keydown'];
+
+            function onGesture() {
+                if (userPaused) return;
+                tryStart(true);
+            }
+            function addGestureListeners() {
+                gestureEvents.forEach(function (evt) { document.addEventListener(evt, onGesture); });
+            }
+            function removeGestureListeners() {
+                gestureEvents.forEach(function (evt) { document.removeEventListener(evt, onGesture); });
+            }
+
+            function tryStart(fromGesture, onBlocked) {
+                if (isPlaying) return;
+
+                if (audioFailed) {
+                    if (!fromGesture) { if (onBlocked) onBlocked(); return; }
+                    isPlaying = true;
+                    setUI(true);
+                    startSynth();
+                    removeGestureListeners();
+                    return;
+                }
 
                 var p;
                 try { p = audioElem.play(); } catch (e) { p = null; }
 
-                if (p && p.catch) {
-                    p.catch(function (err) {
-                        if (err && (err.name === 'NotSupportedError' || audioFailed)) {
-                            startSynth();          // файла нет — запасной синтезатор
-                        } else {
-                            isPlaying = false;     // браузер заблокировал автозапуск
-                            setUI(false);
-                        }
+                if (p && p.then) {
+                    p.then(function () {
+                        isPlaying = true;
+                        setUI(true);
+                        removeGestureListeners();
+                        hideSplash();
+                    }).catch(function (err) {
+                        if (err && err.name === 'NotSupportedError') audioFailed = true;
+                        if (onBlocked) onBlocked();
                     });
+                } else {
+                    isPlaying = true;
+                    setUI(true);
+                    removeGestureListeners();
+                    hideSplash();
                 }
             }
 
@@ -663,19 +720,24 @@
                 setUI(false);
             }
 
+            /* Кнопка с иконкой: пауза / продолжить */
             btn.addEventListener('click', function (e) {
                 e.stopPropagation();
                 if (isPlaying) { userPaused = true; stopMusic(); }
-                else { userPaused = false; startMusic(); }
+                else { userPaused = false; tryStart(true); }
             });
 
-            /* Автозапуск: сразу при загрузке, а если браузер не разрешил — при первом касании */
-            window.addEventListener('load', startMusic);
-            ['pointerdown', 'touchstart', 'click', 'keydown'].forEach(function (evt) {
-                document.addEventListener(evt, function () {
-                    if (!userPaused) startMusic();
-                }, { once: true });
-            });
+            /* ---- Старт при открытии сайта ---- */
+            function init() {
+                tryStart(false, function () {
+                    // Браузер заблокировал автозвук
+                    addGestureListeners();
+                    if (USE_SPLASH) showSplash();
+                });
+            }
+
+            if (document.readyState === 'complete') init();
+            else window.addEventListener('load', init);
         })();
     </script>
 </body>
